@@ -1,3 +1,4 @@
+import sk from "vuetify/es5/locale/sk";
 require('dotenv').config()
 const { join } = require('path')
 const { copySync, removeSync } = require('fs-extra')
@@ -10,7 +11,7 @@ module.exports = {
   env: {
     apiUrl: process.env.API_URL || process.env.APP_URL + '/api',
     appName: process.env.APP_NAME || 'Laravel Nuxt',
-    appLocale: process.env.APP_LOCALE || 'en',
+    appLocale: process.env.APP_LOCALE || 'sk',
     githubAuth: !!process.env.GITHUB_CLIENT_ID
   },
 
@@ -39,16 +40,41 @@ module.exports = {
 
   plugins: [
     '~components/global',
+    "~plugins/index",
     '~plugins/i18n',
     '~plugins/vform',
     '~plugins/axios',
     '~plugins/fontawesome',
     '~plugins/nuxt-client-init',
-    { src: '~plugins/bootstrap', mode: 'client' }
   ],
 
   modules: [
     '@nuxtjs/router'
+  ],
+  buildModules: [
+    // With options
+    [
+      "@nuxtjs/vuetify",
+      {
+        icons: {
+          iconfont: "mdi",
+        },
+        theme: {
+          themes: {
+            light: {
+              primary: "#6200EA",
+              gray: "#f7f9fb",
+              success: "#ff6200",
+              white: "#fff",
+            },
+          },
+        },
+        lang: {
+          locales: { sk },
+          current: "sk",
+        },
+      },
+    ],
   ],
 
   build: {

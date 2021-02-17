@@ -1,117 +1,152 @@
 <template>
-  <div class="row">
-    <div class="col-lg-8 m-auto">
-      <card v-if="mustVerifyEmail" :title="$t('register')">
-        <div class="alert alert-success" role="alert">
-          {{ $t('verify_email_address') }}
-        </div>
-      </card>
-      <card v-else :title="$t('register')">
-        <form @submit.prevent="register" @keydown="form.onKeydown($event)">
-          <!-- Name -->
-          <div class="form-group row">
-            <label class="col-md-3 col-form-label text-md-right">{{ $t('name') }}</label>
-            <div class="col-md-7">
-              <input v-model="form.name" :class="{ 'is-invalid': form.errors.has('name') }" type="text" name="name" class="form-control">
-              <has-error :form="form" field="name" />
-            </div>
-          </div>
+  <v-container>
+    <v-row class="justify-center">
+      <v-col cols="12" xl="8" lg="6" md="8" class="m-auto">
+        <card v-if="mustVerifyEmail" :title="$t('register')">
+          <v-card-text class="mt-5">
+            {{ $t("verify_email_address") }}
+          </v-card-text>
+        </card>
+        <card v-else :title="$t('register')">
+          <v-card-text>
+            <v-row class="justify-center">
+              <v-col cols="12" lg="8" md="6">
+                <v-form
+                  @submit.prevent="register"
+                  @keydown="form.onKeydown($event)"
+                  ref="form"
+                >
+                  <!-- Name -->
+                  <v-text-field
+                    name="name"
+                    :label="$t('reg_page_name')"
+                    id="id"
+                    v-model="form.name"
+                    :placeholder="$t('reg_page_insert_name')"
+                    :error-messages="form.errors.errors.name"
+                    outlined
+                    :rules="[$rules.required, $rules.min10chars]"
+                  ></v-text-field>
 
-          <!-- Email -->
-          <div class="form-group row">
-            <label class="col-md-3 col-form-label text-md-right">{{ $t('email') }}</label>
-            <div class="col-md-7">
-              <input v-model="form.email" :class="{ 'is-invalid': form.errors.has('email') }" type="email" name="email" class="form-control">
-              <has-error :form="form" field="email" />
-            </div>
-          </div>
+                  <!-- Email -->
 
-          <!-- Password -->
-          <div class="form-group row">
-            <label class="col-md-3 col-form-label text-md-right">{{ $t('password') }}</label>
-            <div class="col-md-7">
-              <input v-model="form.password" :class="{ 'is-invalid': form.errors.has('password') }" type="password" name="password" class="form-control">
-              <has-error :form="form" field="password" />
-            </div>
-          </div>
+                  <v-text-field
+                    name="email"
+                    :label="$t('email')"
+                    :placeholder="$t('reg_page_insert_email')"
+                    id="email"
+                    v-model="form.email"
+                    :error-messages="form.errors.errors.email"
+                    outlined
+                    :rules="[$rules.required, $rules.email]"
+                  ></v-text-field>
 
-          <!-- Password Confirmation -->
-          <div class="form-group row">
-            <label class="col-md-3 col-form-label text-md-right">{{ $t('confirm_password') }}</label>
-            <div class="col-md-7">
-              <input v-model="form.password_confirmation" :class="{ 'is-invalid': form.errors.has('password_confirmation') }" type="password" name="password_confirmation"
-                     class="form-control"
-              >
-              <has-error :form="form" field="password_confirmation" />
-            </div>
-          </div>
+                  <!-- Password -->
 
-          <div class="form-group row">
-            <div class="col-md-7 offset-md-3 d-flex">
-              <!-- Submit Button -->
-              <v-button :loading="form.busy">
-                {{ $t('register') }}
-              </v-button>
+                  <v-text-field
+                    name="password"
+                    type="password"
+                    :label="$t('password')"
+                    :placeholder="$t('reg_page_insert_pwd')"
+                    id="password"
+                    v-model="form.password"
+                    :error-messages="form.errors.errors.password"
+                    outlined
+                    :rules="[$rules.required, $rules.min10chars]"
+                  ></v-text-field>
 
-              <!-- GitHub Login Button -->
-              <login-with-github />
-            </div>
-          </div>
-        </form>
-      </card>
-    </div>
-  </div>
+                  <!-- Password Confirmation -->
+
+                  <v-text-field
+                    name="password_confirmation"
+                    :placeholder="$t('reg_page_pwd_again')"
+                    type="password"
+                    :label="$t('confirm_password')"
+                    id="password"
+                    v-model="form.password_confirmation"
+                    :error-messages="form.errors.errors.password"
+                    outlined
+                    :rules="[$rules.required, $rules.min10chars]"
+                  ></v-text-field>
+
+                  <v-row>
+                    <v-col cols="12" lg="12" class="d-flex justify-center">
+                      <!-- Submit Button -->
+                      <v-btn
+                        color="primary"
+                        type="submit"
+                        :loading="form.busy"
+                        >{{ $t("register") }}</v-btn
+                      >
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import Form from 'vform'
+import Form from "vform";
 
 export default {
-  middleware: 'guest',
-
+  middleware: "guest",
+  head() {
+    return {
+      title: `Registrácia`,
+    };
+  },
   data: () => ({
     form: new Form({
-      name: '',
-      email: '',
-      password: '',
-      password_confirmation: ''
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
     }),
-    mustVerifyEmail: false
+    mustVerifyEmail: false,
   }),
 
-  head () {
-    return { title: this.$t('register') }
-  },
-
   methods: {
-    async register () {
-      let data
+    async register() {
+      // Register the user.
 
+      if (this.form.name.length < 2) {
+        this.$noty.warning("Meno musi mat aspon 8 znakov.");
+        return;
+      }
+      if (!this.$refs.form.validate()) return;
+      let data;
       // Register the user.
       try {
-        const response = await this.form.post('/register')
-        data = response.data
+        const response = await this.form.post("/register");
+        data = response.data;
       } catch (e) {
-        return
+        return;
       }
-
       // Must verify email fist.
       if (data.status) {
-        this.mustVerifyEmail = true
+        this.mustVerifyEmail = true;
       } else {
         // Log in the user.
-        const { data: { token } } = await this.form.post('/login')
+        const {
+          data: { token },
+        } = await this.form.post("/login");
 
         // Save the token.
-        this.$store.dispatch('auth/saveToken', { token })
+        this.$store.dispatch("auth/saveToken", { token });
 
         // Update the user.
-        await this.$store.dispatch('auth/updateUser', { user: data })
+        // await this.$store.dispatch("auth/updateUser", { user: data });
 
+        await this.$store.dispatch("auth/fetchUser");
         // Redirect home.
-        this.$router.push({ name: 'home' })
+        this.$router.push({ name: "home" });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

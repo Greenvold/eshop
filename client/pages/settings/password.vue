@@ -1,61 +1,70 @@
 <template>
   <card :title="$t('your_password')">
-    <form @submit.prevent="update" @keydown="form.onKeydown($event)">
-      <alert-success :form="form" :message="$t('password_updated')" />
-
-      <!-- Password -->
-      <div class="form-group row">
-        <label class="col-md-3 col-form-label text-md-right">{{ $t('new_password') }}</label>
-        <div class="col-md-7">
-          <input v-model="form.password" :class="{ 'is-invalid': form.errors.has('password') }" type="password" name="password" class="form-control">
-          <has-error :form="form" field="password" />
-        </div>
-      </div>
-
-      <!-- Password Confirmation -->
-      <div class="form-group row">
-        <label class="col-md-3 col-form-label text-md-right">{{ $t('confirm_password') }}</label>
-        <div class="col-md-7">
-          <input v-model="form.password_confirmation" :class="{ 'is-invalid': form.errors.has('password_confirmation') }" type="password" name="password_confirmation" class="form-control">
-          <has-error :form="form" field="password_confirmation" />
-        </div>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="form-group row">
-        <div class="col-md-9 ml-md-auto">
-          <v-button :loading="form.busy" type="success">
-            {{ $t('update') }}
-          </v-button>
-        </div>
-      </div>
-    </form>
+    <v-card-text>
+      <v-form
+        ref="form"
+        class="mt-5"
+        @submit.prevent="update"
+        @keydown="form.onKeydown($event)"
+      >
+        <v-row class="justify-center">
+          <v-col xs="12" sm="12" md="8" cols="12">
+            <v-text-field
+              :label="$t('new_password')"
+              type="password"
+              outlined
+              v-model="form.password"
+              :rules="[$rules.required, $rules.min10chars]"
+              :error-messages="form.errors.errors.password"
+            ></v-text-field>
+          </v-col>
+          <v-col xs="12" sm="12" md="8" cols="12">
+            <v-text-field
+              :label="$t('confirm_password')"
+              type="password"
+              outlined
+              v-model="form.password_confirmation"
+              :rules="[$rules.required, $rules.min10chars]"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <!-- Submit Button -->
+        <v-row class="justify-center">
+          <v-col xs="12" sm="12" md="8" cols="12" class="d-flex justify-center">
+            <v-btn :loading="form.busy" color="primary" @click="update">
+              {{ $t("update") }}</v-btn
+            >
+          </v-col>
+        </v-row>
+      </v-form>
+    </v-card-text>
   </card>
 </template>
 
 <script>
-import Form from 'vform'
+import Form from "vform";
 
 export default {
   scrollToTop: false,
 
-  data: () => ({
-    form: new Form({
-      password: '',
-      password_confirmation: ''
-    })
-  }),
-
-  head () {
-    return { title: this.$t('settings') }
+  metaInfo() {
+    return { title: this.$t("settings") };
   },
 
+  data: () => ({
+    form: new Form({
+      password: "",
+      password_confirmation: "",
+    }),
+  }),
+
   methods: {
-    update () {
-      this.form.patch('/settings/password').then(() => {
-        this.form.reset()
-      })
-    }
-  }
-}
+    async update() {
+      await this.form.patch("/settings/password");
+
+      this.$refs.form.reset();
+      this.$noty.success("Natavenia uspesne zmenene");
+    },
+  },
+};
 </script>

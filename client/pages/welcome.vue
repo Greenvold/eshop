@@ -1,52 +1,34 @@
 <template>
-  <div>
-    <div class="top-right links">
-      <template v-if="authenticated">
-        <router-link :to="{ name: 'home' }">
-          {{ $t('home') }}
-        </router-link>
-      </template>
-      <template v-else>
-        <router-link :to="{ name: 'login' }">
-          {{ $t('login') }}
-        </router-link>
-        <router-link :to="{ name: 'register' }">
-          {{ $t('register') }}
-        </router-link>
-      </template>
-    </div>
-
-    <div class="text-center">
-      <div class="title mb-4">
-        <span class="laravel">Laravel</span><span class="nuxt">Nuxt</span>
-        <!-- {{ title }} -->
-      </div>
-
-      <div class="links">
-        <a href="https://github.com/cretueusebiu/laravel-nuxt">github.com/cretueusebiu/laravel-nuxt</a>
-      </div>
-    </div>
-  </div>
+  <v-container>
+    <v-card>
+      <v-card-title>
+        This is the home page for unregistered users
+      </v-card-title>
+      <v-card-text>
+        Please login to proceed
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
-  layout: 'simple',
+  layout: "simple",
 
   data: () => ({
-    title: process.env.appName
+    title: process.env.appName,
   }),
 
-  head () {
-    return { title: this.$t('home') }
+  head() {
+    return { title: this.$t("home") };
   },
 
   computed: mapGetters({
-    authenticated: 'auth/check'
-  })
-}
+    authenticated: "auth/check",
+  }),
+};
 </script>
 
 <style scoped>

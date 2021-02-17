@@ -1,73 +1,80 @@
 <template>
   <card :title="$t('your_info')">
-    <form @submit.prevent="update" @keydown="form.onKeydown($event)">
-      <alert-success :form="form" :message="$t('info_updated')" />
-
-      <!-- Name -->
-      <div class="form-group row">
-        <label class="col-md-3 col-form-label text-md-right">{{ $t('name') }}</label>
-        <div class="col-md-7">
-          <input v-model="form.name" :class="{ 'is-invalid': form.errors.has('name') }" type="text" name="name" class="form-control">
-          <has-error :form="form" field="name" />
-        </div>
-      </div>
-
-      <!-- Email -->
-      <div class="form-group row">
-        <label class="col-md-3 col-form-label text-md-right">{{ $t('email') }}</label>
-        <div class="col-md-7">
-          <input v-model="form.email" :class="{ 'is-invalid': form.errors.has('email') }" type="email" name="email" class="form-control">
-          <has-error :form="form" field="email" />
-        </div>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="form-group row">
-        <div class="col-md-9 ml-md-auto">
-          <v-button :loading="form.busy" type="success">
-            {{ $t('update') }}
-          </v-button>
-        </div>
-      </div>
-    </form>
+    <v-card-text>
+      <form ref="form" class="mt-5">
+        <!-- <alert-success :form="form" :message="$t('info_updated')" /> -->
+        <!-- Name -->
+        <v-row class="justify-center">
+          <v-col xs="12" sm="12" md="7" cols="12">
+            <v-text-field
+              :label="$t('name')"
+              outlined
+              v-model="form.name"
+              :rules="[$rules.required, $rules.min10chars]"
+            ></v-text-field>
+          </v-col>
+          <v-col xs="12" sm="7" md="7" cols="12">
+            <v-text-field
+              :label="$t('email')"
+              outlined
+              v-model="form.email"
+              type="email"
+              :rules="[$rules.required, $rules.email]"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="12" class="d-flex justify-center">
+            <v-btn color="primary" @click="update"> {{ $t("update") }}</v-btn>
+          </v-col>
+        </v-row>
+      </form>
+    </v-card-text>
   </card>
 </template>
 
 <script>
-import Form from 'vform'
-import { mapGetters } from 'vuex'
+import Form from "vform";
+import { mapGetters } from "vuex";
 
 export default {
   scrollToTop: false,
+  head() {
+    return {
+      title: `Profil`,
+    };
+  },
 
   data: () => ({
     form: new Form({
-      name: '',
-      email: ''
-    })
+      name: "",
+      email: "",
+    }),
   }),
 
-  head () {
-    return { title: this.$t('settings') }
+  computed: {
+    ...mapGetters({
+      user: "auth/user",
+    }),
   },
 
-  computed: mapGetters({
-    user: 'auth/user'
-  }),
-
-  created () {
+  created() {
     // Fill the form with user data.
     this.form.keys().forEach((key) => {
-      this.form[key] = this.user[key]
-    })
+      this.form[key] = this.user[key];
+    });
   },
 
   methods: {
-    update () {
-      this.form.patch('/settings/profile').then(({ data: user }) => {
-        this.$store.dispatch('auth/updateUser', { user })
-      })
-    }
-  }
-}
+    async update() {
+      const { data } = await this.form.patch("/settings/profile").catch(() => {
+        alert("error");
+      });
+
+      this.$store.dispatch("auth/updateUser", { user: data });
+      this.$noty.success("Natavenia uspesne zmenene");
+    },
+  },
+};
 </script>
+<style scoped></style>
