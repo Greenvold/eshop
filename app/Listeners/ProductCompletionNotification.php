@@ -3,10 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\ProductCreated;
-use App\Models\User;
 use App\Notifications\NewProductAdminNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Notification;
 
 class ProductCompletionNotification
 {
@@ -28,11 +26,9 @@ class ProductCompletionNotification
      */
     public function handle(ProductCreated $event)
     {
-        (new User)->forceFill([
-            'name' => 'Admin Majster',
-            'email' => 'admin@test.com',
-        ])->notify((new NewProductAdminNotification($event->product))->delay(now()->addMinutes(config('app.product_delay_notification'))));
+        Notification::route('mail', 'admin@test.com')
+            ->notify((new NewProductAdminNotification($event->product))->delay(now()->addMinutes(config('app.product_delay_notification'))));
 
-        info('New product has been created with ID: ' . $event->product);
+        info('New product has been created with ID: ' . $event->product->id);
     }
 }

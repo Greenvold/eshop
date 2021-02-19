@@ -12,6 +12,8 @@ class NewProductAdminNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    private $product;
+
     /**
      * Create a new notification instance.
      *
@@ -20,6 +22,7 @@ class NewProductAdminNotification extends Notification implements ShouldQueue
     public function __construct(Product $product)
     {
         $this->product = $product;
+       
     }
 
     /**

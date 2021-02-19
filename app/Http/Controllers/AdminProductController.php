@@ -13,6 +13,7 @@ class AdminProductController extends Controller
 {
     private $productService;
 
+    //we could add middleware for this controller in future for some role as admin, right not its managed via api auth middleware group
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
