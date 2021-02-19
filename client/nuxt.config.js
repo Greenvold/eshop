@@ -46,6 +46,7 @@ module.exports = {
     '~plugins/axios',
     '~plugins/fontawesome',
     '~plugins/nuxt-client-init',
+    { src: "~plugins/noty", mode: "client" },
   ],
 
   modules: [

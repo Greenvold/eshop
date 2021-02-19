@@ -27,9 +27,9 @@ const routes = [
     ]
   },
 
-  { path: '/admin-panel', name: 'admin.index', component: page('admin/index.vue') },
+  { path: '/products', name: 'products.index', component: page('admin/products/index.vue') },
   { path: '/create-product', name: 'product.create', component: page('admin/products/create.vue') },
-  { path: '/update-product', name: 'product.update', component: page('admin/products/update.vue') },
+  { path: '/update-product/:product', name: 'product.update', component: page('admin/products/update.vue') },
   { path: '/categories', name: 'categories.index', component: page('admin/categories/index.vue') },
 ]
 

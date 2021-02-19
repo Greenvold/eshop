@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\OAuthController;
@@ -29,6 +30,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::patch('settings/profile', [ProfileController::class, 'update']);
     Route::patch('settings/password', [PasswordController::class, 'update']);
+
+    //can be done via resource conroller in future and one line of code
+    Route::delete('product/{product}', [AdminProductController::class,'destroy']);
+    Route::post('product', [AdminProductController::class,'store']);
+    Route::get('products', [AdminProductController::class,'index']);
 });
 
 Route::group(['middleware' => 'guest:api'], function () {

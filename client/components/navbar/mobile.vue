@@ -89,7 +89,7 @@ export default {
         {
           title: this.$t("nav_admin_zone"),
           icon: "mdi-database",
-          link: "admin.index",
+          link: "products.index",
         },
         {
           title: this.$t("settings"),

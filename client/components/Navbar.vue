@@ -34,7 +34,7 @@
           <v-list>
             <v-list-item
               :to="{
-                name: 'admin.index',
+                name: 'products.index',
               }"
             >
               <v-list-item-title>

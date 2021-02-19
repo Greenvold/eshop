@@ -13,7 +13,8 @@ class ProductStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        //checked via api middleware group, potentionally we could check required permissions
+        return true;
     }
 
     /**
@@ -24,7 +25,8 @@ class ProductStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
+            'description' => 'required|string'
         ];
     }
 }

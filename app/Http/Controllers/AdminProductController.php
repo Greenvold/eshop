@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 
 class AdminProductController extends Controller
 {
+    private $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -26,9 +34,9 @@ class AdminProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        return $this->productService->createProduct($request);
     }
 
     /**
@@ -60,8 +68,8 @@ class AdminProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        return $product->delete();
     }
 }
