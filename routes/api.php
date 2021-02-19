@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -32,9 +33,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('settings/password', [PasswordController::class, 'update']);
 
     //can be done via resource conroller in future and one line of code
+    Route::get('product/{product}', [AdminProductController::class,'show']);
     Route::delete('product/{product}', [AdminProductController::class,'destroy']);
+    Route::put('product/{product}', [AdminProductController::class,'update']);
     Route::post('product', [AdminProductController::class,'store']);
     Route::get('products', [AdminProductController::class,'index']);
+    Route::get('categories', [AdminCategoryController::class,'index']);
 });
 
 Route::group(['middleware' => 'guest:api'], function () {

@@ -22,6 +22,16 @@
             :hint="$t('tell_us_about_you')"
             :rules="[$rules.required]"
           ></v-textarea>
+          <v-select
+            v-model="form.categories"
+            :items="categories"
+            :menu-props="{ maxHeight: '400' }"
+            label="Select"
+            multiple
+            hint="Pick categories"
+            persistent-hint
+            outlined
+          ></v-select>
         </v-form>
       </v-card-text>
       <v-card-actions class="d-flex justify-center">
@@ -46,9 +56,15 @@ export default {
         categories: "",
       }),
       loading: false,
+      categories: "",
     };
   },
   methods: {
+    fetchCategories() {
+      this.$http.get("/categories").then(({ data }) => {
+        this.categories = data.data;
+      });
+    },
     submit() {
       if (!this.$refs.form.validate()) return;
       this.loading = true;
@@ -66,6 +82,9 @@ export default {
           this.loading = false;
         });
     },
+  },
+  mounted() {
+    this.fetchCategories();
   },
 };
 </script>
