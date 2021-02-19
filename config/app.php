@@ -86,8 +86,7 @@ return [
 
     'locales' => [
         'en' => 'EN',
-        'es' => 'ES',
-        'zh-CN' => '中文',
+        'sk' => 'SK',
     ],
 
     /*
@@ -236,5 +235,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    'product_delay_notification' => 15
 
 ];
