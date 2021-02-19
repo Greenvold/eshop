@@ -1,51 +1,60 @@
 <template>
-  <div class="row">
-    <div class="col-md-3">
-      <card :title="$t('settings')" class="settings-card">
-        <ul class="nav flex-column nav-pills">
-          <li v-for="tab in tabs" :key="tab.route" class="nav-item">
-            <router-link :to="{ name: tab.route }" class="nav-link" active-class="active">
-              <fa :icon="tab.icon" fixed-width />
-              {{ tab.name }}
-            </router-link>
-          </li>
-        </ul>
-      </card>
-    </div>
-
-    <div class="col-md-9">
-      <transition name="fade" mode="out-in">
-        <router-view />
-      </transition>
-    </div>
-  </div>
+  <v-container class="mt-5" fluid>
+    <v-row>
+      <v-col cols="12" md="3">
+        <card :title="$t('settings')" class="settings-card">
+          <v-list>
+            <v-list-item-group color="primary" v-model="item">
+              <v-list-item
+                v-for="tab in tabs"
+                :key="tab.route"
+                active-class="active"
+                :to="{ name: tab.route }"
+                link
+              >
+                <v-list-item-icon>
+                  <v-icon>{{ tab.icon }}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="tab.name"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </card>
+      </v-col>
+      <v-col cols="12" md="9">
+        <transition name="fade" mode="out-in">
+          <router-view />
+        </transition>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {
-  middleware: 'auth',
-
+  middleware: "auth",
+  data() {
+    return {
+      item: 0,
+    };
+  },
   computed: {
-    tabs () {
+    tabs() {
       return [
         {
-          icon: 'user',
-          name: this.$t('profile'),
-          route: 'settings.profile'
+          icon: "mdi-account",
+          name: this.$t("profile"),
+          route: "settings.profile",
         },
         {
-          icon: 'lock',
-          name: this.$t('password'),
-          route: 'settings.password'
-        }
-      ]
-    }
-  }
-}
+          icon: "mdi-lock",
+          name: this.$t("password"),
+          route: "settings.password",
+        },
+      ];
+    },
+  },
+};
 </script>
-
-<style>
-.settings-card .card-body {
-  padding: 0;
-}
-</style>

@@ -1,99 +1,103 @@
 <template>
-  <div class="row">
-    <div class="col-lg-8 m-auto">
-      <card :title="$t('login')">
-        <form @submit.prevent="login" @keydown="form.onKeydown($event)">
-          <!-- Email -->
-          <div class="form-group row">
-            <label class="col-md-3 col-form-label text-md-right">{{ $t('email') }}</label>
-            <div class="col-md-7">
-              <input v-model="form.email" :class="{ 'is-invalid': form.errors.has('email') }" type="email" name="email" class="form-control">
-              <has-error :form="form" field="email" />
-            </div>
-          </div>
-
-          <!-- Password -->
-          <div class="form-group row">
-            <label class="col-md-3 col-form-label text-md-right">{{ $t('password') }}</label>
-            <div class="col-md-7">
-              <input v-model="form.password" :class="{ 'is-invalid': form.errors.has('password') }" type="password" name="password" class="form-control">
-              <has-error :form="form" field="password" />
-            </div>
-          </div>
-
-          <!-- Remember Me -->
-          <div class="form-group row">
-            <div class="col-md-3" />
-            <div class="col-md-7 d-flex">
-              <checkbox v-model="remember" name="remember">
-                {{ $t('remember_me') }}
-              </checkbox>
-
-              <router-link :to="{ name: 'password.request' }" class="small ml-auto my-auto">
-                {{ $t('forgot_password') }}
-              </router-link>
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <div class="col-md-7 offset-md-3 d-flex">
-              <!-- Submit Button -->
-              <v-button :loading="form.busy">
-                {{ $t('login') }}
-              </v-button>
-
-              <!-- GitHub Login Button -->
-              <login-with-github />
-            </div>
-          </div>
-        </form>
-      </card>
-    </div>
-  </div>
+  <v-container>
+    <v-row class="justify-center">
+      <v-col cols="12" xl="8" lg="6" md="8">
+        <card :title="$t('log_in_page')">
+          <v-card-text>
+            <v-row class="justify-center">
+              <v-col cols="12" lg="8" md="6">
+                <form
+                  class="mt-5"
+                  @submit.prevent="login"
+                  @keydown="form.onKeydown($event)"
+                >
+                  <v-text-field
+                    label="Email"
+                    :placeholder="$t('log_in_page_email')"
+                    outlined
+                    v-model="form.email"
+                    :error-messages="form.errors.errors.email"
+                  ></v-text-field>
+                  <v-text-field
+                    label="Heslo"
+                    :placeholder="$t('log_in_page_pwd')"
+                    outlined
+                    type="password"
+                    v-model="form.password"
+                    :error-messages="form.errors.errors.email"
+                  ></v-text-field>
+                  <v-btn
+                    :loading="loading"
+                    type="submit"
+                    block
+                    large
+                    depressed
+                    color="primary"
+                    >{{ $t("log_in_page_log_in_button") }}</v-btn
+                  >
+                  <div class="d-flex justify-center mt-5">
+                    <nuxt-link
+                      :to="{ name: 'password.request' }"
+                      class="small fake-link primary--text"
+                    >
+                      {{ $t("forgot_password") }}
+                    </nuxt-link>
+                  </div>
+                </form>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import Form from 'vform'
+import Form from "vform";
 
 export default {
-  middleware: 'guest',
-
+  head() {
+    return {
+      title: `Prihlásenie`,
+    };
+  },
   data: () => ({
     form: new Form({
-      email: '',
-      password: ''
+      email: "",
+      password: "",
     }),
-    remember: false
+    loading: false,
+    remember: false,
   }),
 
-  head () {
-    return { title: this.$t('login') }
-  },
-
   methods: {
-    async login () {
-      let data
-
+    async login() {
+      // Submit the form.
+      this.loading = true;
+      let data;
       // Submit the form.
       try {
-        const response = await this.form.post('/login')
-        data = response.data
+        const response = await this.form.post("/login");
+        data = response.data;
       } catch (e) {
-        return
+        this.loading = false;
+        return;
       }
 
       // Save the token.
-      this.$store.dispatch('auth/saveToken', {
+      this.$store.dispatch("auth/saveToken", {
         token: data.token,
-        remember: this.remember
-      })
+        remember: this.remember,
+      });
 
       // Fetch the user.
-      await this.$store.dispatch('auth/fetchUser')
-
+      await this.$store.dispatch("auth/fetchUser");
+      this.loading = false;
       // Redirect home.
-      this.$router.push({ name: 'home' })
-    }
-  }
-}
+
+      this.$router.push({ name: "home" });
+    },
+  },
+};
 </script>

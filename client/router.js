@@ -25,7 +25,12 @@ const routes = [
       { path: 'profile', name: 'settings.profile', component: page('settings/profile.vue') },
       { path: 'password', name: 'settings.password', component: page('settings/password.vue') }
     ]
-  }
+  },
+
+  { path: '/products', name: 'products.index', component: page('admin/products/index.vue') },
+  { path: '/create-product', name: 'product.create', component: page('admin/products/create.vue') },
+  { path: '/update-product/:product', name: 'product.update', component: page('admin/products/update.vue') },
+  { path: '/categories', name: 'categories.index', component: page('admin/categories/index.vue') },
 ]
 
 export function createRouter () {
